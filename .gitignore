@@ -1,0 +1,10 @@
+node_modules
+temp
+.tmp
+dist
+package
+app/build.js
+app.zip
+cypress/videos
+cypress/screenshots
+.DS_Store

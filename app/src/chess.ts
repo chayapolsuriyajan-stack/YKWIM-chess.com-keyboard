@@ -106,7 +106,7 @@ export function describeMove(board: IChessboard, move: IMove) : string {
 export function go(board: IChessboard, input: string) : boolean {
   const command = getCommandAction(input);
   if (command && command.isAvailable()) {
-    command.act();
+    command.act('');
     return true;
   }
 

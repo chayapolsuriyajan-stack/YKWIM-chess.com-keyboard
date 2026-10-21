@@ -14,6 +14,7 @@ const translations : TLocaleSet = {
   blindFoldPeekHint: 'Наведите курсор сюда или нажмите $key чтобы увидеть доску',
   blindFoldOn: 'Режим игры вслепую включен',
   blindfoldToggleHint: 'Нажмите сюда или введите /blindfold для выключения',
+  playUsage: 'Формат: /play 15:10 (минуты:добавление)',
   _test: 'Test content',
   _test_1_placeholder: 'Test content $name1',
   _test_2_placeholders: 'Test content $name1 $name2',

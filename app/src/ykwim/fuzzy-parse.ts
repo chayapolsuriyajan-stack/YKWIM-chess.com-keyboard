@@ -16,6 +16,8 @@ export interface IFuzzyIntent {
   capture?: boolean
   // type of the piece which has to be captured
   target?: TPiece
+  // move exactly one square forward (pawn push)
+  oneStep?: boolean
   // intents of lower tiers are only tried if higher ones match nothing
   tier: number
 }
@@ -55,6 +57,7 @@ function parseMover(letter: string) : TMover[] | null {
  *   exd   - e-pawn captures on d-file (same as "ed")
  *   xf7   - any piece captures on f7
  *   f7    - any piece goes to f7
+ *   e     - e-pawn one square forward
  */
 export function parseFuzzyInput(input: string) : IFuzzyIntent[] {
   const moveString = input.replace(/[\s+#!?=\-]+/g, '');
@@ -100,6 +103,8 @@ export function parseFuzzyInput(input: string) : IFuzzyIntent[] {
       }
     } else if (isFileLetter && moverLetter) {
       addForEachMover({ toFile: what, capture, tier: 0 });
+    } else if (isFileLetter && !capture && rest !== 'B') {
+      intents.push({ piece: 'p', fromFile: what, toFile: what, oneStep: true, tier: 0 });
     }
   }
 

@@ -9,6 +9,13 @@ import {
   Nullable,
 } from './types';
 import { i18n } from './i18n';
+import {
+  getNewGameButton,
+  getRematchButton,
+  getPlayUrl,
+  navigate,
+  parseTimeControl,
+} from './ykwim/game-commands';
 
 const RESIGN_BUTTON_SELECTOR = `
   .resign-button-component,
@@ -95,6 +102,34 @@ export const commands : Command[] = [
     },
   },
   {
+    name: 'n',
+    isAvailable: () => Boolean(getNewGameButton()),
+    act: () => {
+      const newGameButton = getNewGameButton();
+      newGameButton && newGameButton.click();
+    },
+  },
+  {
+    name: 're',
+    isAvailable: () => Boolean(getRematchButton()),
+    act: () => {
+      const rematchButton = getRematchButton();
+      rematchButton && rematchButton.click();
+    },
+  },
+  {
+    name: 'play',
+    isAvailable: () => true,
+    act: (args: string) => {
+      const timeControl = parseTimeControl(args);
+      if (timeControl) {
+        navigate(getPlayUrl(timeControl));
+      } else {
+        postMessage(i18n('playUsage'));
+      }
+    },
+  },
+  {
     name: 'confirm',
     isAvailable: () => Boolean(document.querySelector('.daily-confirm-move-buttons .cc-button-primary')),
     act: () => {
@@ -109,9 +144,18 @@ export const commands : Command[] = [
  */
 export function getCommandAction(input: string) : Command | null {
   if (input[0] === '/') {
-    const command = commands.find(c => c.name === input.slice(1));
+    // "/play 15:10" and "/play(15:10)" -> name "play", args "15:10"
+    const [, name, args] = /^\/([a-z]*)(.*)$/i.exec(input.trim()) || ['', '', ''];
+    const command = commands.find(c => c.name === name.toLowerCase());
 
-    return command || {
+    if (command) {
+      return {
+        ...command,
+        act: () => command.act(args.trim().replace(/^\((.*)\)$/, '$1')),
+      };
+    }
+
+    return {
       name: 'no-command-found',
       isAvailable: () => true,
       act: () => {

@@ -5,6 +5,11 @@ import {
   getBoard,
 } from './chessboard';
 import {
+  getCommandAction,
+} from './commands';
+import { i18n } from './i18n';
+import {
+  postMessage,
   holdingCtrlOrCmd,
   isEditable,
   isModifierPressed,
@@ -66,21 +71,31 @@ export function bindInputKeyDown(input: HTMLInputElement) {
       }
 
       const board = getBoard();
+      const command = getCommandAction(input.value);
+      let success = false;
 
-      if (board) {
-        const success = go(board, input.value);
-        board && board.clearMarkedArrows();
-
-        if (success) {
-          input.value = '';
-
-          // needed to remove autocomplete
-          // after successful command execution
-          setTimeout(() => {
-            const event = new Event('keyup');
-            input.dispatchEvent(event);
-          }, 200);
+      if (command) {
+        // commands don't need a board (e.g. /play)
+        if (command.isAvailable()) {
+          command.act('');
+          success = true;
+        } else {
+          postMessage(i18n('commandNotFound', { command: input.value }));
         }
+      } else if (board) {
+        success = go(board, input.value);
+        board.clearMarkedArrows();
+      }
+
+      if (success) {
+        input.value = '';
+
+        // needed to remove autocomplete
+        // after successful command execution
+        setTimeout(() => {
+          const event = new Event('keyup');
+          input.dispatchEvent(event);
+        }, 200);
       }
 
       input.focus();

@@ -65,7 +65,8 @@ function matchesIntent(move: ILegalMove, intent: IFuzzyIntent) : boolean {
     (!intent.toFile || move.to[0] === intent.toFile) &&
     (!intent.toRank || move.to[1] === intent.toRank) &&
     (!intent.capture || Boolean(move.captured)) &&
-    (!intent.target || move.captured === intent.target)
+    (!intent.target || move.captured === intent.target) &&
+    (!intent.oneStep || Math.abs(move.to.charCodeAt(1) - move.from.charCodeAt(1)) === 1)
   );
 }
 

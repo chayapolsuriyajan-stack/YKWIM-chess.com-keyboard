@@ -60,7 +60,7 @@ describe('parseFuzzyInput', function() {
   it('ignores complete moves and garbage', function() {
     assert.deepEqual(parseFuzzyInput('Nf3'), []);
     assert.deepEqual(parseFuzzyInput('hello'), []);
-    assert.deepEqual(parseFuzzyInput('e'), []);
+    assert.deepEqual(parseFuzzyInput('ex'), []);
   });
 
   it('treats letter after x as a captured piece, file as a fallback', function() {
@@ -227,5 +227,38 @@ describe('resolveInput', function() {
       assert.equal(go(board, 'Rxb7'), false);
       assert.deepEqual(madeMoves, []);
     });
+  });
+});
+
+describe('single file letter', function() {
+  const pieces: IPiece[] = [
+    { color: WHITE, type: 'p', area: 'e2' },
+    { color: WHITE, type: 'p', area: 'd2' },
+    { color: WHITE, type: 'b', area: 'c1' },
+    { color: BLACK, type: 'n', area: 'f3' },
+  ];
+  const legal: TFromTo[] = [['e2', 'e3'], ['e2', 'e4'], ['e2', 'f3'], ['d2', 'd3'], ['d2', 'd4']];
+
+  it('e: e-pawn one square forward, not two and not a capture', function() {
+    const { board } = getBoard(pieces, legal);
+    assert.deepEqual(resolve(board, 'e'), { source: 'fuzzy', moves: ['e2e3'] });
+  });
+
+  it('works for black pawns too', function() {
+    const { board } = getBoard(
+      [{ color: BLACK, type: 'p', area: 'c7' }],
+      [['c7', 'c6'], ['c7', 'c5']],
+    );
+    assert.deepEqual(resolve(board, 'c').moves, ['c7c6']);
+  });
+
+  it('a number still means the exact square', function() {
+    const { board } = getBoard(pieces, legal);
+    assert.deepEqual(resolve(board, 'e4').moves, ['e2e4']);
+  });
+
+  it('does nothing if the pawn is blocked', function() {
+    const { board } = getBoard(pieces, [['d2', 'd3']]);
+    assert.deepEqual(resolve(board, 'e').moves, []);
   });
 });

@@ -7,6 +7,12 @@ when you mistype, suggests what you probably meant.
 Based on [Chess Helper / Chess.com Keyboard](https://github.com/everyonesdesign/Chess-Helper)
 by everyonesdesign (MIT).
 
+## Install (no npm needed)
+
+1. Download [`release/ykwim-chess-keyboard.zip`](release/ykwim-chess-keyboard.zip) and unzip it into a folder you keep.
+2. Open `chrome://extensions` and turn on **Developer mode**.
+3. Click **Load unpacked** and pick the unzipped folder.
+
 ## Using it
 
 Press `C` to focus the move field, type a move, press `Enter`.
@@ -18,6 +24,7 @@ doesn't match a legal move, and a shorthand is played only if it matches exactly
 
 | Type     | Means                                                    | Example result |
 |----------|----------------------------------------------------------|----------------|
+| `e`      | the e-pawn one square forward (`e4` for two)             | `e3`           |
 | `nf`     | the knight move to the f-file                            | `Nf3`          |
 | `r1`     | the rook move to the 1st rank                            | `Rd1`          |
 | `qxb`    | queen takes the **bishop** (with `x` the letter is a piece) | `Qxg4`      |
@@ -47,6 +54,10 @@ Press `Enter` again to play it. A suggestion is never played without that second
 Type `/` to see commands.
 
 - `/rsg`: resign. It also confirms chess.com's "are you sure?" dialog, so it takes one step.
+- `/n`: new game with the same time control (the "New ..." button after a game).
+- `/re`: rematch.
+- `/play 15:10`, `/play (3:2)`: look for a game with that time control
+  (minutes:increment; `15+10`, `15|10` and `3` work too).
 - `/draw`: offer a draw.
 - `/blindfold`: toggle blindfold mode.
 - `/confirm`, `/cancel`: confirm or cancel a daily move.
@@ -61,6 +72,12 @@ npm run build      # build app/build.js
 npm run watch      # rebuild on change
 npm test           # unit tests
 npm run pack       # app.zip for the stores
+```
+
+After changing the code, refresh the committed pack:
+
+```
+npm run pack && mv app.zip release/ykwim-chess-keyboard.zip
 ```
 
 Load it in Chrome: `chrome://extensions` → enable Developer mode → **Load unpacked** →

@@ -14,6 +14,7 @@ const translations : TLocaleSet = {
   blindFoldPeekHint: 'Hover here or hold $key to peek',
   blindFoldOn: 'Blindfold mode is on',
   blindfoldToggleHint: 'Click here or type /blindfold to toggle',
+  playUsage: 'Usage: /play 15:10 (minutes:increment)',
   _test: 'Test content',
   _test_1_placeholder: 'Test content $name1',
   _test_2_placeholders: 'Test content $name1 $name2',

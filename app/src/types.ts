@@ -64,6 +64,7 @@ export type TTranslationId =
   'illegalMove' |
   'commandNotFound' |
   'didYouMean' |
+  'playUsage' |
   'inputHint' |
   'focusHint' |
   'focusHintFromOther' |
@@ -79,5 +80,6 @@ export type TLocaleSet = Record<TTranslationId, string>;
 export interface Command {
   name: string;
   isAvailable: () => boolean;
-  act: () => void;
+  // args is the text after the command name, e.g. "15:10" for "/play 15:10"
+  act: (args: string) => void;
 }
